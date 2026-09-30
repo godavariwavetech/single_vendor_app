@@ -12,6 +12,8 @@ import {
   ActivityIndicator,
   Alert,
   Linking,
+  ScrollView,
+  Platform,
   Animated, Easing
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
@@ -58,6 +60,7 @@ export default function OTPVerification({ navigation, route }) {
   const [referralCode, setReferralCode] = useState('');
   const [formError, setFormError] = useState('');
   const [responseOtp, setResponseOtp] = useState(route.params.otp || "")
+  const [focusedBox, setFocusedBox] = useState(0);
 
   useEffect(() => {
     if (showNewUserModal) {
@@ -253,90 +256,115 @@ export default function OTPVerification({ navigation, route }) {
     <Pressable onPress={() => Keyboard.dismiss()} style={{ flex: 1 }}>
       <View style={styles.main}>
         <StatusBar translucent hidden />
-        <View
-          style={{
-            width: responsiveWidth(100),
-            height: responsiveHeight(30),
-            backgroundColor: '#fff',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Image
-            source={require('./tabassets/singlevendorlogo.png')}
-            resizeMode="contain"
-            style={{
-              width: responsiveWidth(52),
-              height: responsiveWidth(52) * 0.675,
-            }}
-          />
-        </View>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: '#fff',
-            transform: [{ translateY: -responsiveHeight(4.5) }],
-            borderTopLeftRadius: 24,
-            borderTopRightRadius: 24,
-            borderTopWidth: 1,
-            borderColor: '#E5E5E5',
-            paddingHorizontal: responsiveWidth(5),
-            paddingVertical: responsiveHeight(3),
-          }}>
-          <Text
-            style={{
-              color: '#3D3D3D',
-              textAlign: 'center',
-              fontSize: 20,
-              fontWeight: '500',
-            }}>
-            Enter the verification code we just sent on the mobile number
-            {maskPhoneNumber(` ${route.params?.phoneNumber}`)}
-          </Text>
-          <View style={styles.otpContainer}>
-            {otp.map((digit, index) => (
-              <TextInput
-              key={index}
-              ref={el => (inputRefs.current[index] = el)}
-              style={[styles.otpBox, { borderColor: isDarkMode ? '#555' : '#ccc' }]}
-              keyboardType="numeric"
-              maxLength={index === 0 ? otp.length : 1} // only first input allows full paste
-              placeholderTextColor={isDarkMode ? '#aaa' : '#666'}
-              value={digit}
-              onChangeText={value => handleOTPChange(value, index)}
-              onKeyPress={({ nativeEvent }) => {
-                if (nativeEvent.key === 'Backspace' && !digit && index > 0) {
-                  inputRefs.current[index - 1]?.focus();
-                }
-              }}
+        <View style={styles.header}>
+          <View style={styles.logoBadge}>
+            <Image
+              source={require('./tabassets/singlevendorlogo.png')}
+              resizeMode="contain"
+              style={styles.logoImage}
             />
-            ))}
           </View>
-          {error ? <Text style={styles.errorText}>{error}</Text> : null}
-          <View style={{ marginTop: responsiveHeight(5) }}>
-            {timer !== 0 && <Text style={{ color: "#3D3D3D", fontSize: 18, fontWeight: "700", textAlign: "center" }}>Resend OTP in {timer}s </Text>}
-            <TouchableOpacity disabled={timer != 0} onPress={resendOtpHandler}>
-              <Text style={{ fontSize: 14, color: timer == 0 ? "#117943" : "#8F8F8F", fontWeight: "700", textAlign: "center", marginTop: responsiveHeight(1) }}>Resend OTP</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-            onPress={handleVerifyOtp}
-            style={[styles.loginButton, loader && { opacity: 0.6 }]}
-            disabled={loader}
-          >
-            {loader ? (
-              <ActivityIndicator size="small" color="#fff" />
-            ) : (
-              <Text style={styles.loginText}>Verify</Text>
-            )}
-          </TouchableOpacity>
-
+          <Text style={styles.headerTitle}>Single Vendor</Text>
         </View>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
+            <View style={styles.card}>
+              <View style={styles.badgeRow}>
+                <View style={styles.verifiedBadge}>
+                  <Icon name="message-text-outline" size={14} color="#117943" />
+                </View>
+              </View>
+              <Text style={styles.title}>Verify your number</Text>
+              <Text style={styles.subtitle}>
+                Enter the 4 digit code sent to{' '}
+                {maskPhoneNumber(route.params?.phoneNumber)}
+              </Text>
+
+              <View style={styles.otpContainer}>
+                {otp.map((digit, index) => (
+                  <TextInput
+                    key={index}
+                    ref={el => (inputRefs.current[index] = el)}
+                    style={[
+                      styles.otpBox,
+                      {
+                        borderColor: error
+                          ? '#DC2626'
+                          : focusedBox === index
+                            ? '#117943'
+                            : '#E5E7EB',
+                      },
+                    ]}
+                    keyboardType="number-pad"
+                    maxLength={index === 0 ? otp.length : 1}
+                    placeholderTextColor="#D1D5DB"
+                    textContentType={index === 0 ? 'oneTimeCode' : 'none'}
+                    autoComplete={index === 0 ? 'sms-otp' : 'off'}
+                    value={digit}
+                    onFocus={() => setFocusedBox(index)}
+                    onBlur={() => setFocusedBox(-1)}
+                    onChangeText={value => handleOTPChange(value, index)}
+                    onKeyPress={({ nativeEvent }) => {
+                      if (nativeEvent.key === 'Backspace' && !digit && index > 0) {
+                        setFocusedBox(index - 1);
+                        inputRefs.current[index - 1]?.focus();
+                      }
+                    }}
+                  />
+                ))}
+              </View>
+
+              {error ? (
+                <View style={styles.errorBox}>
+                  <Icon name="alert-circle" size={15} color="#DC2626" />
+                  <Text style={styles.errorText}>{error}</Text>
+                </View>
+              ) : null}
+
+              <View style={styles.resendRow}>
+                {timer !== 0 ? (
+                  <Text style={styles.resendTimer}>
+                    Resend code in{' '}
+                    <Text style={styles.resendTimerValue}>{timer}s</Text>
+                  </Text>
+                ) : (
+                  <TouchableOpacity
+                    onPress={resendOtpHandler}
+                    style={styles.resendButton}
+                    activeOpacity={0.7}>
+                    <Icon name="refresh" size={15} color="#117943" />
+                    <Text style={styles.resendButtonText}>Resend code</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+
+              <TouchableOpacity
+                onPress={handleVerifyOtp}
+                style={[styles.primaryButton, loader && { opacity: 0.7 }]}
+                disabled={loader}
+                activeOpacity={0.85}>
+                {loader ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <Text style={styles.primaryButtonText}>Verify</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </View>
       {showNewUserModal && (
         <View style={{
           position: 'absolute',
           top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: "#117943", // Semi-transparent ABHI24 purple
+          backgroundColor: "rgba(6, 94, 44, 0.92)",
           justifyContent: 'center',
           alignItems: 'center',
           zIndex: 999,
@@ -519,33 +547,140 @@ const styles = StyleSheet.create({
   },
 
   errorText: {
-    color: 'red',
+    color: '#DC2626',
+    fontSize: 13,
+    flex: 1,
+  },
+  header: {
+    width: '100%',
+    height: responsiveHeight(30),
+    backgroundColor: '#117943',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoBadge: {
+    width: responsiveWidth(30),
+    height: responsiveWidth(30),
+    borderRadius: responsiveWidth(15),
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoImage: {
+    width: responsiveWidth(23),
+    height: responsiveWidth(23) * 0.675,
+  },
+  headerTitle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    marginTop: responsiveHeight(1.5),
+  },
+  card: {
+    flex: 1,
+    backgroundColor: '#fff',
+    marginTop: -responsiveHeight(4.5),
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: responsiveWidth(6),
+    paddingTop: responsiveHeight(3.5),
+    paddingBottom: responsiveHeight(3),
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: responsiveHeight(1.5),
+  },
+  verifiedBadge: {
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: '#E8F5EE',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    color: '#111827',
+    fontSize: 22,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  subtitle: {
+    color: '#6B7280',
     fontSize: 14,
-    alignSelf: 'flex-start',
-    marginTop: 8,
-    textAlign: "center"
+    textAlign: 'center',
+    marginTop: responsiveHeight(1),
+    lineHeight: 20,
+  },
+  errorBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FEF2F2',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginTop: responsiveHeight(2.5),
+  },
+  resendRow: {
+    alignItems: 'center',
+    marginTop: responsiveHeight(3.5),
+  },
+  resendTimer: {
+    color: '#6B7280',
+    fontSize: 14,
+  },
+  resendTimerValue: {
+    color: '#111827',
+    fontWeight: '700',
+  },
+  resendButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  resendButtonText: {
+    color: '#117943',
+    fontSize: 14,
+    fontWeight: '700',
+    marginLeft: 6,
+  },
+  primaryButton: {
+    backgroundColor: '#117943',
+    height: 54,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: responsiveHeight(4),
+  },
+  primaryButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
   otpContainer: {
     flexDirection: 'row',
-    // justifyContent: "space-between",
-    // marginHorizontal:20,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    // alignSelf:"center",
-    // marginVertical: 16,
-    marginTop: responsiveHeight(5),
-    gap: 16,
+    marginTop: responsiveHeight(4),
+    gap: 12,
   },
   otpBox: {
-    width: 60,
-    height: 60,
-    borderWidth: 1,
-    borderRadius: 7,
+    width: 62,
+    height: 62,
+    borderWidth: 1.5,
+    borderRadius: 12,
     textAlign: 'center',
-    fontSize: 18,
-    // backgroundColor: '#F5F9FF',
-    borderColor: '#117943',
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#111827',
+    backgroundColor: '#F9FAFB',
   },
   timer: {
     color: 'gray',

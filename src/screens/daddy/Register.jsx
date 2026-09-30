@@ -10,6 +10,9 @@ import {
   Keyboard,
   ActivityIndicator,
   Alert,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import AuthBackground from './tabassets/AuthBackground';
@@ -27,7 +30,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { getUserLoginOTP } from '../../services/services';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import CustomModal from '../components/CustomModal';
-import { useColorScheme } from 'react-native';
 
 
 
@@ -46,8 +48,6 @@ export default function Register({ navigation, route }) {
   const loading = useSelector(state => state.Auth.loading);
   const [phoneSuggestions, setPhoneSuggestions] = useState([]);
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
-  const colorScheme = useColorScheme();
-  const isDarkMode = colorScheme === 'dark';
 
 
   useEffect(() => {
@@ -139,121 +139,109 @@ export default function Register({ navigation, route }) {
           </View>
         )}
         <StatusBar translucent hidden />
-        <View
-          style={{
-            width: responsiveWidth(100),
-            height: responsiveHeight(30),
-            backgroundColor: '#fff',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <Image
-            source={require('./tabassets/singlevendorlogo.png')}
-            resizeMode="contain"
-            style={{
-              width: responsiveWidth(52),
-              height: responsiveWidth(52) * 0.675,
-            }}
-          />
-        </View>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: '#fff',
-            transform: [{ translateY: -responsiveHeight(4.5) }],
-            borderTopLeftRadius: 24,
-            borderTopRightRadius: 24,
-            borderTopWidth: 1,
-            borderColor: '#E5E5E5',
-            paddingHorizontal: responsiveWidth(5),
-            paddingVertical: responsiveHeight(3),
-          }}>
-          <Text
-            style={{
-              color: '#3D3D3D',
-              textAlign: 'center',
-              fontSize: 20,
-              fontWeight: '500',
-            }}>
-            Please enter your phone number to continue
-          </Text>
-          <View style={{ marginTop: responsiveHeight(5) }}>
-            <Text style={styles.label}>Phone Number</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter Phone Number"
-              placeholderTextColor={isDarkMode ? '#CCCCCC' : '#3D3D3D'}
-              keyboardType="phone-pad"
-              value={phoneNumber}
-              onChangeText={(text) => {
-                const numericText = text.replace(/[^0-9]/g, '');
-                setPhoneNumber(numericText);
-
-                const filtered = phoneSuggestions.filter(item =>
-                  item.startsWith(numericText)
-                );
-                setFilteredSuggestions(filtered);
-              }}
-              maxLength={10}
+        <View style={styles.header}>
+          <View style={styles.logoBadge}>
+            <Image
+              source={require('./tabassets/singlevendorlogo.png')}
+              resizeMode="contain"
+              style={styles.logoImage}
             />
-
-            {filteredSuggestions.length > 0 && (
-              <View style={{
-                backgroundColor: '#fff',
-                borderColor: '#ccc',
-                borderWidth: 1,
-                borderRadius: 8,
-                marginTop: 5,
-                maxHeight: 150,
-              }}>
-                {filteredSuggestions.map((suggestion, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    onPress={() => {
-                      setPhoneNumber(suggestion);
-                      setFilteredSuggestions([]); // hide dropdown
-                    }}
-                    style={{
-                      padding: 10,
-                      borderBottomColor: '#eee',
-                      borderBottomWidth: index !== filteredSuggestions.length - 1 ? 1 : 0,
-                    }}>
-                    <Text style={{ color: '#000' }}>{suggestion}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
-
           </View>
-          <TouchableOpacity
-            onPress={handleGetOTP}
-            style={[
-              styles.loginButton,
-              sendingOTP && { opacity: 0.6 } // Visual feedback when disabled
-            ]}
-            disabled={sendingOTP}
-          >
-            <Text style={styles.loginText}>
-              {sendingOTP ? <ActivityIndicator size="small" color="#fff" /> : 'Get OTP'}
-            </Text>
-          </TouchableOpacity>
-
-          {/* {!withoutLogin && <>
-            <View style={styles.dividerContainer}>
-              <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>OR</Text>
-              <View style={styles.dividerLine} />
-            </View>
-
-            <TouchableOpacity
-              onPress={() => dispatch(actionLogin())}
-              style={styles.skipButton}
-            >
-              <Text style={styles.skipText}>Skip Login</Text>
-              <Icon name="arrow-right" size={20} color="#117943" />
-            </TouchableOpacity>
-          </>} */}
+          <Text style={styles.headerTitle}>Single Vendor</Text>
         </View>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        >
+          <ScrollView
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+          >
+            <View style={styles.card}>
+              <Text style={styles.title}>Enter your phone number</Text>
+              <Text style={styles.subtitle}>
+                We will send you a one-time code to verify your number
+              </Text>
+
+              <View style={styles.fieldGroup}>
+                <Text style={styles.label}>Phone Number</Text>
+                <View style={styles.inputWrapper}>
+                  <Text style={styles.countryCode}>+91</Text>
+                  <View style={styles.countryDivider} />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="10 digit mobile number"
+                    placeholderTextColor="#9CA3AF"
+                    keyboardType="phone-pad"
+                    textContentType="telephoneNumber"
+                    autoComplete="tel"
+                    value={phoneNumber}
+                    onChangeText={(text) => {
+                      const numericText = text.replace(/[^0-9]/g, '');
+                      setPhoneNumber(numericText);
+
+                      const filtered = phoneSuggestions.filter(item =>
+                        item.startsWith(numericText)
+                      );
+                      setFilteredSuggestions(filtered);
+                    }}
+                    maxLength={10}
+                  />
+                </View>
+
+                {filteredSuggestions.length > 0 && (
+                  <View style={styles.suggestions}>
+                    {filteredSuggestions.map((suggestion, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => {
+                          setPhoneNumber(suggestion);
+                          setFilteredSuggestions([]);
+                        }}
+                        style={[
+                          styles.suggestionRow,
+                          index !== filteredSuggestions.length - 1 &&
+                            styles.suggestionBorder,
+                        ]}>
+                        <Icon name="phone-outline" size={16} color="#9CA3AF" />
+                        <Text style={styles.suggestionText}>{suggestion}</Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
+              </View>
+
+              <TouchableOpacity
+                onPress={handleGetOTP}
+                style={[styles.primaryButton, sendingOTP && { opacity: 0.7 }]}
+                disabled={sendingOTP}
+                activeOpacity={0.85}>
+                {sendingOTP ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <Text style={styles.primaryButtonText}>Get OTP</Text>
+                )}
+              </TouchableOpacity>
+
+              {/* {!withoutLogin && <>
+                <View style={styles.dividerContainer}>
+                  <View style={styles.dividerLine} />
+                  <Text style={styles.dividerText}>OR</Text>
+                  <View style={styles.dividerLine} />
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => dispatch(actionLogin())}
+                  style={styles.skipButton}
+                >
+                  <Text style={styles.skipText}>Skip Login</Text>
+                  <Icon name="arrow-right" size={20} color="#117943" />
+                </TouchableOpacity>
+              </>} */}
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </View>
     </Pressable>
   );
@@ -279,18 +267,133 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
+  header: {
+    width: '100%',
+    height: responsiveHeight(30),
+    backgroundColor: '#117943',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoBadge: {
+    width: responsiveWidth(30),
+    height: responsiveWidth(30),
+    borderRadius: responsiveWidth(15),
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoImage: {
+    width: responsiveWidth(23),
+    height: responsiveWidth(23) * 0.675,
+  },
+  headerTitle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    marginTop: responsiveHeight(1.5),
+  },
+  card: {
+    flex: 1,
+    backgroundColor: '#fff',
+    marginTop: -responsiveHeight(4.5),
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    paddingHorizontal: responsiveWidth(6),
+    paddingTop: responsiveHeight(3.5),
+    paddingBottom: responsiveHeight(3),
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  title: {
+    color: '#111827',
+    fontSize: 22,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  subtitle: {
+    color: '#6B7280',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: responsiveHeight(1),
+    lineHeight: 20,
+  },
+  fieldGroup: {
+    marginTop: responsiveHeight(4),
+  },
   label: {
-    fontSize: 17,
-    fontWeight: '500',
-    marginBottom: 5,
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#374151',
+    letterSpacing: 0.3,
+    marginBottom: responsiveHeight(1.2),
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    backgroundColor: '#fff',
+    paddingHorizontal: responsiveWidth(4),
+  },
+  countryCode: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111827',
+  },
+  countryDivider: {
+    width: 1,
+    height: 22,
+    backgroundColor: '#E5E7EB',
+    marginHorizontal: responsiveWidth(3),
   },
   input: {
-    padding: 12,
-    borderRadius: 8,
+    flex: 1,
+    fontSize: 16,
+    color: '#111827',
+    paddingVertical: 14,
+  },
+  suggestions: {
+    backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#666',
-    color: '#000',
-    fontWeight: 'condensed',
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    marginTop: responsiveHeight(1),
+    overflow: 'hidden',
+    maxHeight: 150,
+  },
+  suggestionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: responsiveWidth(4),
+  },
+  suggestionBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  suggestionText: {
+    color: '#111827',
+    fontSize: 15,
+    marginLeft: 10,
+  },
+  primaryButton: {
+    backgroundColor: '#117943',
+    height: 54,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: responsiveHeight(4),
+  },
+  primaryButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: 0.3,
   },
   passwordContainer: {
     flexDirection: 'row',
@@ -330,18 +433,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#065E2C',
     fontWeight: '400',
-  },
-  loginButton: {
-    backgroundColor: "#117943", // updated
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: responsiveHeight(5),
-  },
-  loginText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '700',
   },
   signupText: {
     textAlign: 'center',
