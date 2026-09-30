@@ -143,16 +143,16 @@ export default function Register({ navigation, route }) {
           style={{
             width: responsiveWidth(100),
             height: responsiveHeight(30),
-            backgroundColor: '#117943',
+            backgroundColor: '#fff',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
           <Image
-            source={require('./tabassets/freshieslogo.png')}
+            source={require('./tabassets/singlevendorlogo.png')}
             resizeMode="contain"
             style={{
-              width: responsiveWidth(62),
-              height: responsiveHeight(14),
+              width: responsiveWidth(52),
+              height: responsiveWidth(52) * 0.675,
             }}
           />
         </View>
@@ -163,6 +163,8 @@ export default function Register({ navigation, route }) {
             transform: [{ translateY: -responsiveHeight(4.5) }],
             borderTopLeftRadius: 24,
             borderTopRightRadius: 24,
+            borderTopWidth: 1,
+            borderColor: '#E5E5E5',
             paddingHorizontal: responsiveWidth(5),
             paddingVertical: responsiveHeight(3),
           }}>
