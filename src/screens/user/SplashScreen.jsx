@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, View, Image, StatusBar } from 'react-native'
+import { SafeAreaView, StyleSheet, View, Image, Text, StatusBar } from 'react-native'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setInitial } from '../../redux/reducers/auth'
@@ -11,13 +11,15 @@ const SplashScreen = ({ navigation }) => {
 
   useEffect(() => {
     dispatch(setInitial())
+    let timer
     if (rehydrated) {
-      setTimeout(() => {
+      timer = setTimeout(() => {
         if (!token) {
           navigation.replace('OnboardingScreen');
         }
       }, 500);
     }
+    return () => clearTimeout(timer);
   }, [token, rehydrated]);
 
 
@@ -25,11 +27,14 @@ const SplashScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#117943" barStyle="light-content" />
       <View style={styles.imgContainer}>
-        <Image
-          source={require('../daddy/tabassets/freshieslogo.png')}
-          style={{ width: responsiveWidth(72), height: responsiveHeight(20) }}
-          resizeMode="contain"
-        />
+        <View style={styles.logoBadge}>
+          <Image
+            source={require('../daddy/tabassets/singlevendorlogo.png')}
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
+        </View>
+        <Text style={styles.appName}>Single Vendor</Text>
       </View>
     </SafeAreaView>
   )
@@ -46,7 +51,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  text1: {
-
+  logoBadge: {
+    width: responsiveWidth(44),
+    borderRadius: responsiveWidth(4.5),
+    backgroundColor: '#fff',
+    paddingHorizontal: responsiveWidth(5),
+    paddingVertical: responsiveHeight(2.2),
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  logoImage: {
+    width: responsiveWidth(34),
+    height: responsiveWidth(34) * 0.675,
+  },
+  appName: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+    marginTop: responsiveHeight(3),
   }
 })

@@ -12,7 +12,7 @@ import {
   ActivityIndicator,
   Linking,
   RefreshControl,
-  LayoutAnimation, UIManager,
+  UIManager,
   Alert
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -51,7 +51,6 @@ const ProfileScreen = () => {
   const [orders, setOrders] = useState([]);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [appVersion, setAppVersion] = useState('');
-  const [isPoliciesExpanded, setIsPoliciesExpanded] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
   const insets = useSafeAreaInsets();
 
@@ -157,15 +156,6 @@ const ProfileScreen = () => {
 
       setUpdateModalVisible(true); // Show error message
       setShowUpdateModal(false);
-    }
-  };
-
-  const openLink = async (url) => {
-    const supported = await Linking.canOpenURL(url);
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
-      Alert.alert("Can't open this link", url);
     }
   };
 
@@ -304,51 +294,6 @@ const ProfileScreen = () => {
               <Text style={styles.menuText}>Refund Policy</Text>
             </View>
             <Icon name="chevron-right" size={24} color="#666" />
-          </TouchableOpacity>
-
-          {/* 📜 Policies */}
-          <TouchableOpacity
-            style={styles.menuItemMain}
-            onPress={() => {
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-              setIsPoliciesExpanded(prev => !prev);
-            }}
-          >
-            <View style={styles.menuItemLeft}>
-              <MaterialCommunityIcons name="shield-lock-outline" size={24} color="#117943" />
-              <Text style={styles.menuText}>Policies</Text>
-            </View>
-            <Icon name="chevron-right" size={24} color="#666" />
-          </TouchableOpacity>
-          {isPoliciesExpanded && (
-            <>
-              <TouchableOpacity style={styles.menuItemMain} onPress={() => openLink('https://abhi24.in/privacypolicy')}>
-                <View style={styles.menuItemLeft}>
-                  <MaterialCommunityIcons name="file-document-outline" size={22} color="#117943" />
-                  <Text style={styles.menuText}>Privacy Policy</Text>
-                </View>
-                <MaterialCommunityIcons name="open-in-new" size={20} color="#666" />
-              </TouchableOpacity>
-
-
-
-              <TouchableOpacity style={styles.menuItemMain} onPress={() => openLink('https://abhi24.in/terms')}>
-                <View style={styles.menuItemLeft}>
-                  <MaterialCommunityIcons name="file-certificate-outline" size={22} color="#117943" />
-                  <Text style={styles.menuText}>Terms & Conditions</Text>
-                </View>
-                <MaterialCommunityIcons name="open-in-new" size={20} color="#666" />
-              </TouchableOpacity>
-            </>
-          )}
-
-          {/* ℹ️ About */}
-          <TouchableOpacity style={styles.menuItemMain} onPress={() => openLink('https://abhi24.in/about')}>
-            <View style={styles.menuItemLeft}>
-              <MaterialCommunityIcons name="file-document-outline" size={22} color="#117943" />
-              <Text style={styles.menuText}>About Us</Text>
-            </View>
-            <MaterialCommunityIcons name="open-in-new" size={20} color="#666" />
           </TouchableOpacity>
 
           {/* 🔓 Logout */}
