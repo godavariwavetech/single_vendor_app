@@ -1,4 +1,4 @@
-export const baseURL = 'https://freshiesapi.godavariwave.com/'; 
+export const baseURL = 'https://ekart360.in:2166/'; 
 
 export const API_KEY = 'AIzaSyAwNKqqg4T954ZchoSdnXuyeXIRpE1QxiM'; 
 
