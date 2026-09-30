@@ -97,7 +97,7 @@ const ProfileScreen = () => {
   const handleUpdate = async () => {
     try {
       await Linking.openURL(
-        'https://play.google.com/store/apps/details?id=com.freshies',
+        'https://play.google.com/store/apps/details?id=com.singlevendor',
       );
     } catch (error) {
 

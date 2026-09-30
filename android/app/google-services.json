@@ -9,7 +9,7 @@
                        "client_info":  {
                                            "mobilesdk_app_id":  "1:865322914879:android:482e1c880ded90b1e3d48a",
                                            "android_client_info":  {
-                                                                       "package_name":  "com.freshies"
+                                                                        "package_name":  "com.singlevendor"
                                                                    }
                                        },
                        "oauth_client":  [

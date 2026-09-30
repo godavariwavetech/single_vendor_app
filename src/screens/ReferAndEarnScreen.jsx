@@ -55,7 +55,7 @@ const ReferAndEarnScreen = ({ navigation }) => {
         ? refferalData.refer_content.slice(0, 2).map((item) => `• ${item}`).join('\n')
         : '';
 
-      const message = `Hey! Use my referral code *${referralCode}* to sign up on Freshies.\n\n📲 Download the app: https://play.google.com/store/apps/details?id=com.freshies&hl=en\n\n${bulletPoints}`;
+      const message = `Hey! Use my referral code *${referralCode}* to sign up on Single Vendor.\n\n📲 Download the app: https://play.google.com/store/apps/details?id=com.singlevendor&hl=en\n\n${bulletPoints}`;
 
       await Share.share({ message });
     } catch (error) {

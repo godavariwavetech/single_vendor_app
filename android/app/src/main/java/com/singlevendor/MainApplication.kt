@@ -1,4 +1,4 @@
-package com.freshies
+package com.singlevendor
 
 import android.app.Application
 import com.facebook.react.PackageList
