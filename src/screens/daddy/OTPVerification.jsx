@@ -257,8 +257,8 @@ export default function OTPVerification({ navigation, route }) {
   return (
     <Pressable onPress={() => Keyboard.dismiss()} style={{ flex: 1 }}>
       <View style={styles.main}>
-        <StatusBar translucent hidden />
-        <View style={styles.header}>
+        <StatusBar backgroundColor="#F4F7F4" barStyle="dark-content" />
+        <View style={styles.brandHeader}>
           <View style={styles.logoBadge}>
             <Image
               source={require('./tabassets/singlevendorlogo.png')}
@@ -266,7 +266,10 @@ export default function OTPVerification({ navigation, route }) {
               style={styles.logoImage}
             />
           </View>
-          <Text style={styles.headerTitle}>Single Vendor</Text>
+          <View>
+            <Text style={styles.headerTitle}>Single Vendor</Text>
+            <Text style={styles.headerCaption}>FRESHNESS AT YOUR DOORSTEP</Text>
+          </View>
         </View>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
@@ -275,19 +278,28 @@ export default function OTPVerification({ navigation, route }) {
           <ScrollView
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ flexGrow: 1 }}
+            contentContainerStyle={styles.scrollContent}
           >
             <View style={styles.card}>
-              <View style={styles.badgeRow}>
-                <View style={styles.verifiedBadge}>
-                  <Icon name="message-text-outline" size={14} color="#117943" />
-                </View>
+              <View style={styles.stepBadge}>
+                <Icon name="shield-check-outline" size={14} color="#147A43" />
+                <Text style={styles.stepText}>SECURE SIGN-IN</Text>
               </View>
-              <Text style={styles.title}>Verify your number</Text>
+              <Text style={styles.title}>Check your messages</Text>
               <Text style={styles.subtitle}>
-                Enter the 4 digit code sent to{' '}
-                {maskPhoneNumber(route.params?.phoneNumber)}
+                Enter the 4-digit code we sent to
               </Text>
+              <View style={styles.phoneRow}>
+                <Text style={styles.phoneNumber}>
+                  +91 {maskPhoneNumber(route.params?.phoneNumber)}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}
+                  accessibilityRole="button"
+                  accessibilityLabel="Change phone number">
+                  <Text style={styles.changePhone}>Change</Text>
+                </TouchableOpacity>
+              </View>
 
               <View style={styles.otpContainer}>
                 {otp.map((digit, index) => (
@@ -296,13 +308,8 @@ export default function OTPVerification({ navigation, route }) {
                     ref={el => (inputRefs.current[index] = el)}
                     style={[
                       styles.otpBox,
-                      {
-                        borderColor: error
-                          ? '#DC2626'
-                          : focusedBox === index
-                            ? '#117943'
-                            : '#E5E7EB',
-                      },
+                      error && styles.otpBoxError,
+                      focusedBox === index && !error && styles.otpBoxFocused,
                     ]}
                     keyboardType="number-pad"
                     maxLength={index === 0 ? otp.length : 1}
@@ -456,7 +463,7 @@ export default function OTPVerification({ navigation, route }) {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F4F7F4',
   },
   container: {
     flex: 1,
@@ -553,91 +560,127 @@ const styles = StyleSheet.create({
     fontSize: 13,
     flex: 1,
   },
-  header: {
-    width: '100%',
-    height: responsiveHeight(29),
-    backgroundColor: '#117943',
+  brandHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoBadge: {
-    width: responsiveWidth(44),
-    borderRadius: responsiveWidth(4.5),
-    backgroundColor: '#fff',
-    paddingHorizontal: responsiveWidth(5),
-    paddingVertical: responsiveHeight(2.2),
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.18,
-    shadowRadius: 6,
-    elevation: 4,
-  },
-  logoImage: {
-    width: responsiveWidth(34),
-    height: responsiveWidth(34) * 0.675,
-  },
-  headerTitle: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-    marginTop: responsiveHeight(1.5),
-  },
-  card: {
-    flex: 1,
-    backgroundColor: '#fff',
-    marginTop: -16,
     paddingHorizontal: responsiveWidth(6),
     paddingTop: responsiveHeight(2),
-    paddingBottom: responsiveHeight(3),
+    paddingBottom: responsiveHeight(1.5),
   },
-  badgeRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: responsiveHeight(1.5),
-  },
-  verifiedBadge: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#E8F5EE',
+  logoBadge: {
+    width: 54,
+    height: 54,
+    borderRadius: 16,
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#E7EEE8',
+    marginRight: 12,
+  },
+  logoImage: {
+    width: 44,
+    height: 38,
+  },
+  headerTitle: {
+    color: '#14241A',
+    fontSize: 17,
+    fontWeight: '700',
+    letterSpacing: 0.1,
+  },
+  headerCaption: {
+    marginTop: 3,
+    color: '#718176',
+    fontSize: 9,
+    letterSpacing: 1.05,
+    fontWeight: '700',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: responsiveWidth(5),
+    paddingVertical: responsiveHeight(2),
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#E8EEE9',
+    paddingHorizontal: responsiveWidth(6),
+    paddingTop: responsiveHeight(3.2),
+    paddingBottom: responsiveHeight(3),
+    shadowColor: '#183B25',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.06,
+    shadowRadius: 18,
+    elevation: 3,
+  },
+  stepBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    backgroundColor: '#EEF6F0',
+    borderRadius: 20,
+    paddingHorizontal: 11,
+    paddingVertical: 7,
+    marginBottom: 16,
+  },
+  stepText: {
+    color: '#287149',
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    marginLeft: 6,
   },
   title: {
-    color: '#111827',
-    fontSize: 23,
+    color: '#17251B',
+    fontSize: 25,
     fontWeight: '700',
-    textAlign: 'center',
+    textAlign: 'left',
+    lineHeight: 31,
   },
   subtitle: {
-    color: '#6B7280',
+    color: '#738076',
     fontSize: 14,
-    textAlign: 'center',
-    marginTop: responsiveHeight(1),
+    textAlign: 'left',
+    marginTop: 8,
     lineHeight: 20,
+  },
+  phoneRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 3,
+  },
+  phoneNumber: {
+    color: '#34473A',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  changePhone: {
+    color: '#147A43',
+    fontSize: 13,
+    fontWeight: '700',
+    marginLeft: 10,
   },
   errorBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FEF2F2',
-    borderRadius: 10,
+    backgroundColor: '#FFF3F1',
+    borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    marginTop: responsiveHeight(2.5),
+    marginTop: 18,
   },
   resendRow: {
     alignItems: 'center',
-    marginTop: responsiveHeight(3.5),
+    marginTop: 20,
   },
   resendTimer: {
-    color: '#6B7280',
+    color: '#718176',
     fontSize: 14,
   },
   resendTimerValue: {
-    color: '#111827',
+    color: '#26382B',
     fontWeight: '700',
   },
   resendButton: {
@@ -645,18 +688,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   resendButtonText: {
-    color: '#117943',
+    color: '#147A43',
     fontSize: 14,
     fontWeight: '700',
     marginLeft: 6,
   },
   primaryButton: {
-    backgroundColor: '#117943',
-    height: 54,
-    borderRadius: 12,
+    backgroundColor: '#147A43',
+    height: 56,
+    borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: responsiveHeight(4),
+    marginTop: 26,
   },
   primaryButtonText: {
     color: '#fff',
@@ -669,19 +712,28 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: responsiveHeight(4.5),
-    gap: responsiveWidth(3),
+    marginTop: responsiveHeight(3.6),
+    gap: responsiveWidth(2.5),
   },
   otpBox: {
     width: responsiveWidth(17),
     height: responsiveWidth(17),
     borderWidth: 1.5,
-    borderRadius: 12,
+    borderColor: '#DDE6DE',
+    borderRadius: 15,
     textAlign: 'center',
-    fontSize: 22,
+    fontSize: 23,
     fontWeight: '700',
-    color: '#111827',
-    backgroundColor: '#F9FAFB',
+    color: '#17251B',
+    backgroundColor: '#FBFCFB',
+  },
+  otpBoxFocused: {
+    borderColor: '#147A43',
+    backgroundColor: '#F4FAF5',
+  },
+  otpBoxError: {
+    borderColor: '#D94638',
+    backgroundColor: '#FFF8F7',
   },
   timer: {
     color: 'gray',

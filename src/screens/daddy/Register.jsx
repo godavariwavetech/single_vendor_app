@@ -138,8 +138,8 @@ export default function Register({ navigation, route }) {
             <ActivityIndicator size="large" color="#065E2C" />
           </View>
         )}
-        <StatusBar translucent hidden />
-        <View style={styles.header}>
+        <StatusBar backgroundColor="#F4F7F4" barStyle="dark-content" />
+        <View style={styles.brandHeader}>
           <View style={styles.logoBadge}>
             <Image
               source={require('./tabassets/singlevendorlogo.png')}
@@ -147,7 +147,10 @@ export default function Register({ navigation, route }) {
               style={styles.logoImage}
             />
           </View>
-          <Text style={styles.headerTitle}>Single Vendor</Text>
+          <View>
+            <Text style={styles.headerTitle}>Single Vendor</Text>
+            <Text style={styles.headerCaption}>FRESHNESS AT YOUR DOORSTEP</Text>
+          </View>
         </View>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
@@ -156,12 +159,13 @@ export default function Register({ navigation, route }) {
           <ScrollView
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ flexGrow: 1 }}
+            contentContainerStyle={styles.scrollContent}
           >
             <View style={styles.card}>
-              <Text style={styles.title}>Enter your phone number</Text>
+              <Text style={styles.eyebrow}>WELCOME</Text>
+              <Text style={styles.title}>Your everyday shop, delivered.</Text>
               <Text style={styles.subtitle}>
-                We will send you a one-time code to verify your number
+                Sign in or create an account with your mobile number.
               </Text>
 
               <View style={styles.fieldGroup}>
@@ -224,6 +228,11 @@ export default function Register({ navigation, route }) {
                 )}
               </TouchableOpacity>
 
+              <View style={styles.securityNote}>
+                <Icon name="shield-check-outline" size={17} color="#66816F" />
+                <Text style={styles.securityText}>A quick, secure sign-in with OTP</Text>
+              </View>
+
               {/* {!withoutLogin && <>
                 <View style={styles.dividerContainer}>
                   <View style={styles.dividerLine} />
@@ -250,7 +259,7 @@ export default function Register({ navigation, route }) {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F4F7F4',
   },
   loaderContainer: {
     position: 'absolute',
@@ -267,82 +276,106 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  header: {
-    width: '100%',
-    height: responsiveHeight(29),
-    backgroundColor: '#117943',
+  brandHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    paddingHorizontal: responsiveWidth(6),
+    paddingTop: responsiveHeight(2),
+    paddingBottom: responsiveHeight(1.5),
   },
   logoBadge: {
-    width: responsiveWidth(44),
-    borderRadius: responsiveWidth(4.5),
+    width: 54,
+    height: 54,
+    borderRadius: 16,
     backgroundColor: '#fff',
-    paddingHorizontal: responsiveWidth(5),
-    paddingVertical: responsiveHeight(2.2),
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.18,
-    shadowRadius: 6,
-    elevation: 4,
+    borderWidth: 1,
+    borderColor: '#E7EEE8',
+    marginRight: 12,
   },
   logoImage: {
-    width: responsiveWidth(34),
-    height: responsiveWidth(34) * 0.675,
+    width: 44,
+    height: 38,
   },
   headerTitle: {
-    color: '#fff',
-    fontSize: 20,
+    color: '#14241A',
+    fontSize: 17,
     fontWeight: '700',
-    letterSpacing: 0.5,
-    marginTop: responsiveHeight(1.5),
+    letterSpacing: 0.1,
+  },
+  headerCaption: {
+    marginTop: 3,
+    color: '#718176',
+    fontSize: 9,
+    letterSpacing: 1.05,
+    fontWeight: '700',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: responsiveWidth(5),
+    paddingVertical: responsiveHeight(2),
   },
   card: {
-    flex: 1,
     backgroundColor: '#fff',
-    marginTop: 0,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#E8EEE9',
     paddingHorizontal: responsiveWidth(6),
-    paddingTop: responsiveHeight(4),
+    paddingTop: responsiveHeight(3.5),
     paddingBottom: responsiveHeight(3),
+    shadowColor: '#183B25',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.06,
+    shadowRadius: 18,
+    elevation: 3,
+  },
+  eyebrow: {
+    color: '#17804A',
+    fontSize: 11,
+    fontWeight: '700',
+    letterSpacing: 1.3,
+    marginBottom: 8,
   },
   title: {
-    color: '#111827',
-    fontSize: 22,
+    color: '#17251B',
+    fontSize: 25,
     fontWeight: '700',
-    textAlign: 'center',
+    textAlign: 'left',
+    lineHeight: 31,
   },
   subtitle: {
-    color: '#6B7280',
+    color: '#738076',
     fontSize: 14,
-    textAlign: 'center',
-    marginTop: responsiveHeight(1),
-    lineHeight: 20,
+    textAlign: 'left',
+    marginTop: 8,
+    lineHeight: 21,
   },
   fieldGroup: {
-    marginTop: responsiveHeight(4),
+    marginTop: responsiveHeight(3.5),
   },
   label: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#374151',
-    letterSpacing: 0.3,
-    marginBottom: responsiveHeight(1.2),
+    color: '#34473A',
+    letterSpacing: 0.2,
+    marginBottom: 9,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: '#E5E7EB',
-    borderRadius: 12,
-    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#DDE6DE',
+    borderRadius: 14,
+    backgroundColor: '#FBFCFB',
+    height: 58,
     paddingHorizontal: responsiveWidth(4),
   },
   countryCode: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#111827',
+    color: '#18291D',
   },
   countryDivider: {
     width: 1,
@@ -353,8 +386,8 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#111827',
-    paddingVertical: 14,
+    color: '#18291D',
+    paddingVertical: 0,
   },
   suggestions: {
     backgroundColor: '#fff',
@@ -381,18 +414,29 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   primaryButton: {
-    backgroundColor: '#117943',
-    height: 54,
-    borderRadius: 12,
+    backgroundColor: '#147A43',
+    height: 56,
+    borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: responsiveHeight(4),
+    marginTop: responsiveHeight(3),
   },
   primaryButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',
-    letterSpacing: 0.3,
+    letterSpacing: 0.1,
+  },
+  securityNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 18,
+  },
+  securityText: {
+    color: '#718176',
+    fontSize: 12,
+    marginLeft: 7,
   },
   passwordContainer: {
     flexDirection: 'row',
