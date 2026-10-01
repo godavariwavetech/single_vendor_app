@@ -139,19 +139,6 @@ export default function Register({ navigation, route }) {
           </View>
         )}
         <StatusBar backgroundColor="#F4F7F4" barStyle="dark-content" />
-        <View style={styles.brandHeader}>
-          <View style={styles.logoBadge}>
-            <Image
-              source={require('./tabassets/singlevendorlogo.png')}
-              resizeMode="contain"
-              style={styles.logoImage}
-            />
-          </View>
-          <View>
-            <Text style={styles.headerTitle}>Single Vendor</Text>
-            <Text style={styles.headerCaption}>FRESHNESS AT YOUR DOORSTEP</Text>
-          </View>
-        </View>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -161,6 +148,19 @@ export default function Register({ navigation, route }) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
+            <View style={styles.brandHeader}>
+              <View style={styles.logoBadge}>
+                <Image
+                  source={require('./tabassets/singlevendorlogo.png')}
+                  resizeMode="contain"
+                  style={styles.logoImage}
+                />
+              </View>
+              <View>
+                <Text style={styles.headerTitle}>Single Vendor</Text>
+                <Text style={styles.headerCaption}>FRESHNESS AT YOUR DOORSTEP</Text>
+              </View>
+            </View>
             <View style={styles.card}>
               <Text style={styles.eyebrow}>WELCOME</Text>
               <Text style={styles.title}>Your everyday shop, delivered.</Text>
@@ -279,9 +279,8 @@ const styles = StyleSheet.create({
   brandHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: responsiveWidth(6),
-    paddingTop: responsiveHeight(2),
-    paddingBottom: responsiveHeight(1.5),
+    paddingHorizontal: responsiveWidth(1),
+    paddingBottom: responsiveHeight(1.2),
   },
   logoBadge: {
     width: 54,
@@ -313,9 +312,10 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     paddingHorizontal: responsiveWidth(5),
-    paddingVertical: responsiveHeight(2),
+    paddingTop: responsiveHeight(1.5),
+    paddingBottom: responsiveHeight(2),
   },
   card: {
     backgroundColor: '#fff',

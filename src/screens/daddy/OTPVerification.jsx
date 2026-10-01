@@ -258,19 +258,6 @@ export default function OTPVerification({ navigation, route }) {
     <Pressable onPress={() => Keyboard.dismiss()} style={{ flex: 1 }}>
       <View style={styles.main}>
         <StatusBar backgroundColor="#F4F7F4" barStyle="dark-content" />
-        <View style={styles.brandHeader}>
-          <View style={styles.logoBadge}>
-            <Image
-              source={require('./tabassets/singlevendorlogo.png')}
-              resizeMode="contain"
-              style={styles.logoImage}
-            />
-          </View>
-          <View>
-            <Text style={styles.headerTitle}>Single Vendor</Text>
-            <Text style={styles.headerCaption}>FRESHNESS AT YOUR DOORSTEP</Text>
-          </View>
-        </View>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -280,6 +267,19 @@ export default function OTPVerification({ navigation, route }) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
           >
+            <View style={styles.brandHeader}>
+              <View style={styles.logoBadge}>
+                <Image
+                  source={require('./tabassets/singlevendorlogo.png')}
+                  resizeMode="contain"
+                  style={styles.logoImage}
+                />
+              </View>
+              <View>
+                <Text style={styles.headerTitle}>Single Vendor</Text>
+                <Text style={styles.headerCaption}>FRESHNESS AT YOUR DOORSTEP</Text>
+              </View>
+            </View>
             <View style={styles.card}>
               <View style={styles.stepBadge}>
                 <Icon name="shield-check-outline" size={14} color="#147A43" />
@@ -563,9 +563,8 @@ const styles = StyleSheet.create({
   brandHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: responsiveWidth(6),
-    paddingTop: responsiveHeight(2),
-    paddingBottom: responsiveHeight(1.5),
+    paddingHorizontal: responsiveWidth(1),
+    paddingBottom: responsiveHeight(1.2),
   },
   logoBadge: {
     width: 54,
@@ -597,9 +596,10 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     paddingHorizontal: responsiveWidth(5),
-    paddingVertical: responsiveHeight(2),
+    paddingTop: responsiveHeight(1.5),
+    paddingBottom: responsiveHeight(2),
   },
   card: {
     backgroundColor: '#fff',
