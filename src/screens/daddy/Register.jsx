@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: responsiveHeight(30),
+    height: responsiveHeight(29),
     backgroundColor: '#117943',
     alignItems: 'center',
     justifyContent: 'center',
@@ -302,17 +302,10 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     backgroundColor: '#fff',
-    marginTop: -responsiveHeight(4.5),
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    marginTop: 0,
     paddingHorizontal: responsiveWidth(6),
-    paddingTop: responsiveHeight(3.5),
+    paddingTop: responsiveHeight(4),
     paddingBottom: responsiveHeight(3),
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 8,
   },
   title: {
     color: '#111827',

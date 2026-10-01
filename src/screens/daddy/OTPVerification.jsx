@@ -162,16 +162,18 @@ export default function OTPVerification({ navigation, route }) {
     let newOtp = [...otp];
   
     // Only allow paste in first box
-    if (index === 0 && value.length === otp.length) {
-      newOtp = value.split('');
+    const digits = value.replace(/\D/g, '');
+    if (index === 0 && digits.length > 1) {
+      newOtp = digits.slice(0, otp.length).split('');
+      while (newOtp.length < otp.length) newOtp.push('');
       setOtp(newOtp);
-      inputRefs.current[otp.length - 1]?.focus(); // focus last input
+      inputRefs.current[Math.min(digits.length, otp.length) - 1]?.focus();
       setError('');
       return;
     }
   
     // Normal single character entry
-    newOtp[index] = value;
+    newOtp[index] = digits.slice(-1);
     setOtp(newOtp);
     setError('');
   
@@ -553,7 +555,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: responsiveHeight(30),
+    height: responsiveHeight(29),
     backgroundColor: '#117943',
     alignItems: 'center',
     justifyContent: 'center',
@@ -586,17 +588,10 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     backgroundColor: '#fff',
-    marginTop: -responsiveHeight(4.5),
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    marginTop: -16,
     paddingHorizontal: responsiveWidth(6),
-    paddingTop: responsiveHeight(3.5),
+    paddingTop: responsiveHeight(2),
     paddingBottom: responsiveHeight(3),
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 8,
   },
   badgeRow: {
     flexDirection: 'row',
@@ -604,16 +599,16 @@ const styles = StyleSheet.create({
     marginBottom: responsiveHeight(1.5),
   },
   verifiedBadge: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: '#E8F5EE',
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
     color: '#111827',
-    fontSize: 22,
+    fontSize: 23,
     fontWeight: '700',
     textAlign: 'center',
   },
@@ -674,12 +669,12 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: responsiveHeight(4),
-    gap: 12,
+    marginTop: responsiveHeight(4.5),
+    gap: responsiveWidth(3),
   },
   otpBox: {
-    width: 62,
-    height: 62,
+    width: responsiveWidth(17),
+    height: responsiveWidth(17),
     borderWidth: 1.5,
     borderRadius: 12,
     textAlign: 'center',

@@ -25,7 +25,7 @@ const SplashScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#117943" barStyle="light-content" />
+      <StatusBar backgroundColor="#117943" barStyle="light-content" hidden />
       <View style={styles.imgContainer}>
         <View style={styles.logoBadge}>
           <Image
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     borderRadius: responsiveWidth(4.5),
     backgroundColor: '#fff',
     paddingHorizontal: responsiveWidth(5),
-    paddingVertical: responsiveHeight(2.2),
+    paddingVertical: responsiveHeight(2.6),
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
@@ -74,6 +74,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '700',
     letterSpacing: 0.5,
-    marginTop: responsiveHeight(3),
+    marginTop: responsiveHeight(2.5),
   }
 })
